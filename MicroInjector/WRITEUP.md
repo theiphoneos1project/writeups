@@ -39,6 +39,7 @@ Images of iLiberty+:
 What I found was - if I let it send the device to recovery mode, then connect the device in recovery mode to the virtual machine in the "USB Devices" tab of UTM, that would consitently do the trick. I let it jailbreak with iLiberty+ and after the process was completed, I was met with the iPhone OS 1 homescreen with a very old version of Cydia installed. 
 
 Upon opening the app, I was met with a familiar, but fairly different page:
+
 ![Image of Cydia running on iPhone OS 1.1.5 on an iPod touch 1st generation](Images/img4_cydia.png)
 
 However, Cydia on this version of iPhone OS was not functional. Refreshing any sources would result in a huge list of errors.
