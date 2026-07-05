@@ -97,7 +97,7 @@ Interestingly, this ran just fine and the message was printed to `stdout`. In th
 
 It... ran! Suprisingly. 
 
-I figured that since this was a plain C program with no Objective-C, it would run without much issues. In fact, I was later told that a large amount of standalone binaries compiled or iPhone OS 2 which contained no Objective-C ran perfectly fine on iPhone OS 1.
+I figured that since this was a plain C program with no Objective-C, it would run without much issues. In fact, I was later told that a large amount of standalone binaries compiled for iPhone OS 2, which contained no Objective-C, ran perfectly fine on iPhone OS 1.
 
 Great! I then went to do the same thing in Objective-C:
 ```objc
@@ -144,9 +144,11 @@ int main(void) {
 }
 ```
 Upon trying, I saw this:
+
 ![Image of macOS Terminal window, SSH'd onto iPod touch 1st generation running iPhone OS 1.1.5, showing an error with the _OBJC_CLASS_$_NSObject symbol not being found](Images/img8_nsobject_symbol_not_found.png)
 
 Okay, I thought, I suppose that makes sense. I removed the inheritance from `NSObject` and added `__attribute__((objc_root_class))`<sup>[7]</sup>, recompiled it, and was met with: 
+
 ![Image of macOS Terminal window, SSH'd onto iPod touch 1st generation running iPhone OS 1.1.5, showing Test = 0x0](Images/img9_objc_runtime_ignore.png)
 
 This left me slightly stumped. I tried adding a print statement to the `+ (void)load` method of the class - it did not get printed. So, it looks like the class was just being ignored by the Objective-C runtime? 
@@ -209,7 +211,7 @@ I proceeded to then implement `MSFindSymbol` and `MSGetImageByName` - making the
 
 It came to the part I was most dreading - `MSHookFunction` and `MSHookMemory`. So instead of implementing them, I decided to write some unit tests for the existing functions to prolong not working on them as long as possible :). They can be found in the [tests](tests/) directory. I made sure to test as thoroughly as possible to make sure all cases were covered - I actually uncovered interesting bugs that took quite a bit of iteration to solve, such as bugs relating to inheritance and making sure hooks are propogated correctly.
 
-I asked for some help on the r/jailbreak Discord server for the task of implementing `MSHookFunction` on armv6. Luckily, [staturnz](https://github.com/staturnzz), once again, came to the rescue. After his help with [rootless-patcher](https://github.com/NightwindDev/rootless-patcher) (without which it would not be possible), I was sure he would help a ton. And he did! Almost the entirety of [HookFunction.c](HookFunction.c) was written by him, with some minor adjustments from my side.
+I asked for some help on the r/jailbreak Discord server for the task of implementing `MSHookFunction` on armv6. Luckily, [staturnz](https://github.com/staturnzz), once again, came to the rescue. After his help with [rootless-patcher](https://github.com/NightwindDev/rootless-patcher) (without which it would not be possible), I was sure he would help a ton. And he did! Almost the entirety of [HookFunction.c](https://github.com/theiphoneos1project/MicroInjector/blob/main/HookFunction.c) was written by him, with some minor adjustments from my side.
 
 As for `MSHookMemory` - I used staturnz's implementation of `MSHookFunction` as inspiration along with some trial-and-error and wrote a simpler hooking mechanism for raw memory.
 
@@ -258,7 +260,7 @@ After some fiddling with a `LaunchProxy` binary I found on the device, I decided
 
 That ended up being quite a good investment. I could see serial logs and was also able to try things out without having to restore the entire device every time. I put `launchd` in a decompiler and looked carefully at the xrefs. I noticed some calls to `execve` (not `execv`). I started to consider hooking that function instead.
 
-After some work, I seem to have gotten something working! The implementation is found in [launchd_trampoline.c](launchd_trampoline/launchd_trampoline.c).
+After some work, I seem to have gotten something working! The implementation is found in [launchd_trampoline.c](https://github.com/theiphoneos1project/MicroInjector/blob/main/launchd_trampoline/launchd_trampoline.c).
 
 ![An image of an iPod touch 1st Generation booted to the Calculator app with an alert saying "MicroInjector Successfully injected into SpringBoard on iPhone OS 1!"](Images/img13_injection_achieved.jpg)
 Seeing the UI show up on a real device gave a great boost of confidence to keep working on the project!
